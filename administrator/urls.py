@@ -14,7 +14,11 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', 'administrator.views.admin_dashboard', name='admin_dashboard'),
     url(r'^seller/request/list/(?P<list_type>[0-9A-Za-z\-]+)/(?P<page>[0-9]+)$',
         'administrator.views.seller_request_list',
         name='seller_request_list'),
+    url(r'^seller/request/view/(?P<object_id>[0-9]+)$',
+        'administrator.views.seller_request_view',
+        name='seller_request_view')
 )

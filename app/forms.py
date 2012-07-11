@@ -266,6 +266,8 @@ class SellerRequestForm(forms.Form):
         """
         Logic for fields
         """
+        if not ('email' in self.cleaned_data and 'name' in self.cleaned_data):
+            return self.cleaned_data
         if SellerRequest.objects.filter(
             name__iexact=self.cleaned_data['name'],
             email=self.cleaned_data['email'],

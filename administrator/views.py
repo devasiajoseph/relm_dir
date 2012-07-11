@@ -10,6 +10,11 @@ import datetime
 from app.models import SellerRequest
 
 
+def admin_dashboard(request):
+    return render_to_response(
+        "admin_dashboard.html",
+        context_instance=RequestContext(request))
+
 def seller_request_list(request, list_type, page):
     if list_type == "all":
         request_list = SellerRequest.objects.all()
@@ -24,3 +29,11 @@ def seller_request_list(request, list_type, page):
                                         {"list_type": list_type,
                                          "request_list": request_list,
                                          "label_map": label_map}))
+
+
+def seller_request_view(request, object_id):
+    seller_request = SellerRequest.objects.get(pk=object_id)
+    return render_to_response(
+        "seller_request_view.html",
+        context_instance=RequestContext(request,
+                                        {"seller_request": seller_request}))

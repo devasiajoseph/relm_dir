@@ -1,0 +1,19 @@
+{% extends "admin_base.html" %}
+{%block content_body %}
+{% load admin_extras %}
+<address>
+      <strong>{{ seller_request.name }}</strong><br/>
+      {{ seller_request.address_line1 }}<br/>
+      {{ seller_request.city }}<br/>
+      {{ seller_request.country.name }}<br/>
+      Phone: {{ seller_request.phone }}<br/>
+      Email: {{ seller_request.email }}<br/>
+      Status: {{seller_request.status|status_label|safe}}
+</address
+  <div class="control-group">
+    <a class="btn btn-large btn-success" onclick="App.User.seller_register_submit()" id="approve_button">Approve</a>
+    <a class="btn btn-large btn-danger" onclick="App.User.seller_register_submit()" id="approve_button">Reject</a>
+  </div>
+  
+
+{%endblock%}

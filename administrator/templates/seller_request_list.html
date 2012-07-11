@@ -1,5 +1,7 @@
 {% extends "admin_base.html" %}
+
 {%block content_body %}
+{% load admin_extras %}
 <ul class="breadcrumb">
   <li {%ifequal list_type "all"%}class="active"{%endifequal%}>
     <a href="/admin/seller/request/list/all/1">All</a>
@@ -30,7 +32,7 @@
     {%for seller_request in request_list%}
     <tr>
       <td>
-	{{ seller_request.name }}
+	<a href="/admin/seller/request/view/{{seller_request.id}}">{{ seller_request.name }}</a>
       </td>
       <td>
 	{{ seller_request.email }}
@@ -39,9 +41,7 @@
 	{{ seller_request.phone }}
       </td>
       <td>
-	<span class="label {%ifequal seller_request.status "pending"%}label-warning{%endifequal%}{%ifequal seller_request.status "approved"%}label-success{%endifequal%}{%ifequal seller_request.status "rejected"%}label-rejected{%endifequal%}">
-	  {{ seller_request.status }}
-	</span>
+	{{ seller_request.status|status_label|safe }}
       </td>
     </tr>
     {%endfor%}
