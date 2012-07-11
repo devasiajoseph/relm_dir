@@ -5,7 +5,6 @@ when you run "manage.py test".
 Replace this with more appropriate tests for your application.
 """
 from django.test import TestCase
-#from adserver.test.mongotest import AdServerTestCase
 from django.test.client import Client
 from django.conf import settings
 import simplejson

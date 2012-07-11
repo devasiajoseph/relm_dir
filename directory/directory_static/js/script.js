@@ -1,6 +1,9 @@
 var App = {
     submit_data : function(obj, submit_obj, url, callback, loader_id) {
 	$("#message___all__").hide();
+	App.hide_error();
+	App.hide_info();
+	App.hide_warning();
         App.show_loader("Submitting", loader_id);
         for(var i in obj["value"]){
             $("#message_"+ obj["value"][i]).html("");
@@ -169,6 +172,13 @@ var App = {
 	},
 	password_reset_password_callback:function(data){
 	    location.href=data["redirect"];
+	},
+	seller_register_submit:function(data){
+	    var obj = {"value":["name", "address_line1", "city", "country", "phone", "email"]};
+            App.submit_data(obj,{},"/seller/register/submit", App.User.seller_register_submit_callback, "loader");
+	},
+	seller_register_submit_callback:function(data){
+	    alert("submitted");
 	}
 	
     }

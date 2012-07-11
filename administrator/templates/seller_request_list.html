@@ -1,0 +1,50 @@
+{% extends "admin_base.html" %}
+{%block content_body %}
+<ul class="breadcrumb">
+  <li {%ifequal list_type "all"%}class="active"{%endifequal%}>
+    <a href="/admin/seller/request/list/all/1">All</a>
+    <span class="divider">|</span>
+  </li>
+  <li {%ifequal list_type "pending"%}class="active"{%endifequal%}>
+    <a href="/admin/seller/request/list/pending/1">Pending</a>
+    <span class="divider">|</span>
+  </li>
+  <li {%ifequal list_type "approved"%}class="active"{%endifequal%}>
+    <a href="/admin/seller/request/list/approved/1">Approved</a>
+    <span class="divider">|</span>
+  </li> 
+  <li {%ifequal list_type "rejected"%}class="active"{%endifequal%}>
+    <a href="/admin/seller/request/list/rejected/1">Rejected</a>
+  </li>
+</ul>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for seller_request in request_list%}
+    <tr>
+      <td>
+	{{ seller_request.name }}
+      </td>
+      <td>
+	{{ seller_request.email }}
+      </td>
+      <td>
+	{{ seller_request.phone }}
+      </td>
+      <td>
+	<span class="label {%ifequal seller_request.status "pending"%}label-warning{%endifequal%}{%ifequal seller_request.status "approved"%}label-success{%endifequal%}{%ifequal seller_request.status "rejected"%}label-rejected{%endifequal%}">
+	  {{ seller_request.status }}
+	</span>
+      </td>
+    </tr>
+    {%endfor%}
+  </tbody>
+</table>
+{%endblock%}

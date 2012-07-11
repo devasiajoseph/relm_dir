@@ -27,6 +27,16 @@ def check_access(request, permission):
         me = request.user
         if me.is_staff or me.is_superuser:
             access_parameters["allow_access"] = True
+    if permission == settings.APP_USER_TYPE["SELLER"]:
+        me = request.user
+        profile = me.get_profile()
+        if profile.user_type == settings.APP_USER_TYPE["SELLER"]:
+            access_parameters["allow_access"] = True
+    if permission == settings.APP_USER_TYPE["BUYER"]:
+        me = request.user
+        profile = me.get_profile()
+        if profile.user_type == settings.APP_USER_TYPE["BUYER"]:
+            access_parameters["allow_access"] = True
 
         return access_parameters
 

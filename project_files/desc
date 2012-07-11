@@ -1,0 +1,20 @@
+The website is a directory website for wholesale sellers in Asia specifically in Vietnam to sell their products in bulk to wholesale buyers in the US. 
+
+Buyer View
+The website main feature will be a search box at the top for buyers to search the products listed on the website. From the search they will view the products, select an item, contact the seller through a message system on the website which sends an email in the similar fashion to how elance message system works. After they agree to an order amount and price they will create a contract similar to elance and each get a copy. Anyone wanting to be a buyer can just sign up to the site. 
+
+Seller
+Seller can not sign up to the site directly they can request to join by filling out a form with their address, phone number, and email. Seller can list their products, upload images, and list pricing and minimum order quantity along with a description and associate it in a category. 
+
+Super Admin
+I will be able to see all the products listed on the website, all the buyers, and all the sellers. I can at anytime see any contract made on the website. I can delete any user or item on the website at anytime along with having the ability to reset passwords. I am the only person able to create categories on the website. Super admin will see a list of people wanting to sign up to the site and see their information I can then approve which sends them a link to sign up or disapprove them which sends them an email they they are not eligible for the site. 
+
+Future Features to keep in mind
+Add a payment system to take money, create multiple super admin, add a live chat feature. 
+
+Deisgn
+I have added some basic sketches of what I would like along with a website screenshot here is the link https://store.coopers.com.au/ to the site. The element I like from this is not the color but a general layout with the middle image dividing up the section between user groups. I would want something with a more basic look. I hope I am conveying the idea across well if not please email me. 
+
+Cost/TimeFrame
+
+I'm trying to get this built in the cheapest way possible please please keep that in mind and also what will hosting cost if we use herok instead of my personal server?

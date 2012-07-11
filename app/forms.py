@@ -3,11 +3,9 @@ from django.conf import settings
 from app.utilities import reply_object
 from django.contrib.auth.models import User, check_password
 from django.contrib.auth import authenticate, login
-import requests
 import re
-from facebooksdk import Facebook
 from django.db.models import Q
-from app.models import UserProfile
+from app.models import UserProfile, Country, SellerRequest
 from app.utilities import create_key, send_password_reset_email
 
 attrs_dict = {'class': 'input-xlarge'}
@@ -226,3 +224,65 @@ class PasswordResetForm(forms.Form):
         user.save()
         response["code"] = settings.APP_CODE["CALLBACK"]
         return response
+
+
+class SellerRequestForm(forms.Form):
+    name = forms.CharField()
+    address_line1 = forms.CharField()
+    city = forms.CharField()
+    country = forms.ChoiceField(choices=(), widget=forms.Select)
+    phone = forms.CharField()
+    email = forms.EmailField()
+
+    def __init__(self, *args, **kwargs):
+        super(SellerRequestForm, self).__init__(*args, **kwargs)
+        country_choices = [(country_obj.id, country_obj.name)\
+                       for country_obj in Country.objects.all()]
+        self.fields['country'].choices = country_choices
+
+    def clean_email(self):
+        """
+        Validate that the email is not already in use.
+        """
+
+        if User.objects.filter(
+            email__iexact=self.cleaned_data['email']).exists():
+            raise forms.ValidationError(("This email already exists"))
+        else:
+            return self.cleaned_data['email']
+
+    def clean_name(self):
+        """
+        Validate that the business name is not already in use.
+        """
+        if UserProfile.objects.filter(
+            name__iexact=self.cleaned_data['name']).exists():
+            raise forms.ValidationError(
+                ("A seller has already registered with this name"))
+        else:
+            return self.cleaned_data['name']
+
+    def clean(self):
+        """
+        Logic for fields
+        """
+        if SellerRequest.objects.filter(
+            name__iexact=self.cleaned_data['name'],
+            email=self.cleaned_data['email'],
+            status=settings.SELLER_REQUEST_STATUS["PENDING"]).exists():
+
+            raise forms.ValidationError(
+                ("This request is under pending. We will let you know when admin approves"))
+        else:
+            return self.cleaned_data
+
+    def save_seller_request(self):
+        seller_country = Country.objects.get(pk=self.cleaned_data["country"])
+        seller_request = SellerRequest.objects.create(
+            name=self.cleaned_data["name"],
+            address_line1=self.cleaned_data["address_line1"],
+            city=self.cleaned_data["city"],
+            country=seller_country,
+            phone=self.cleaned_data["phone"],
+            email=self.cleaned_data["email"],
+            status=settings.SELLER_REQUEST_STATUS["PENDING"])

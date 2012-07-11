@@ -3,15 +3,14 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
-from app.forms import CreateUserForm, LoginForm, PasswordEmailForm
+from django.contrib.auth import authenticate, login, logout
+from django.core.urlresolvers import reverse
+from app.forms import CreateUserForm, LoginForm, PasswordEmailForm,\
+PasswordEmailForm, SellerRequestForm
+from app.models import UserProfile, Country
 from app.utilities import reply_object, create_key
 import simplejson
-from django.contrib.auth import logout
-from django.core.urlresolvers import reverse
 import datetime
-from app.models import UserProfile, SocialAuth
-from app.forms import PasswordResetForm, PasswordEmailForm
-from django.contrib.auth import authenticate, login
 
 
 def index(request):
@@ -122,62 +121,6 @@ def activate(request, verification_key):
                               context_instance=RequestContext(request))
 
 
-def start_fbauth(request):
-    """
-    Starting point for facebook authentication
-    """
-    social_auth = SocialAuth(request=request)
-    redirect_url = social_auth.facebook_step1()
-    return HttpResponseRedirect(redirect_url)
-
-
-def fbauth(request):
-    """
-    Redirect function after facebook authentication
-    """
-    social_auth = SocialAuth(request=request)
-    social_auth.facebook_step2()
-    return HttpResponseRedirect(reverse('home'))
-
-
-def start_twauth(request):
-    """
-        The view function that initiates the entire handshake.
-    """
-    social_auth = SocialAuth(request=request)
-    redirect_url = social_auth.twitter_step1()
-    return HttpResponseRedirect(redirect_url)
-
-
-def twauth(request):
-    """
-    Redirect function after twitter login
-    """
-
-    social_auth = SocialAuth(request=request)
-    social_auth.twitter_step2()
-    return HttpResponseRedirect(reverse('home'))
-
-
-def start_googleauth(request):
-    """
-    Starting point for google authentication
-    uses oauth2.0
-    """
-    social_auth = SocialAuth(request=request)
-    redirect_url = social_auth.google_step1()
-    return HttpResponseRedirect(redirect_url)
-
-
-def googleauth(request):
-    """
-    Redirect after google auth
-    """
-    social_auth = SocialAuth(request=request)
-    social_auth.google_step2()
-    return HttpResponseRedirect(reverse('home'))
-
-
 def password_reset(request):
     """
     Password reset step1
@@ -240,6 +183,28 @@ def password_reset_submit_password(request):
         response = form.save_new_password()
         response["code"] = settings.APP_CODE["CALLBACK"]
         response["redirect"] = reverse('home')
+    else:
+        response["code"] = settings.APP_CODE["FORM ERROR"]
+        response["errors"] = form.errors
+
+    return HttpResponse(simplejson.dumps(response))
+
+
+def seller_register(request):
+    default_country = Country.objects.get(name="Vietnam")
+    form = SellerRequestForm(initial={"country": default_country.id})
+    return render_to_response(
+        "seller/registration_request.html",
+        context_instance=RequestContext(request,
+                                        {"form": form}))
+
+
+def seller_register_submit(request):
+    response = reply_object()
+    form = SellerRequestForm(request.POST)
+    if form.is_valid():
+        form.save_seller_request()
+        response["code"] = settings.APP_CODE["CALLBACK"]
     else:
         response["code"] = settings.APP_CODE["FORM ERROR"]
         response["errors"] = form.errors
