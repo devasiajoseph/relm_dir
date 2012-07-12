@@ -2,33 +2,33 @@
 {% block content_body %}
 
 <div class="form-stacked">
-  <h2>Register as a new seller</h2>
+  <h2>Register as a new seller ({{seller_request.name}})</h2>
   <div class="alert alert-error none" id="message___all__"></div>
   <div class="control-group" id="container_username">
     <label for="id_username">Username:</label>
     <div class="input">
-      {{ user_form.username }}
+      {{ form.username }}
       <div id="message_username" class="help-inline"></div>
     </div>
   </div>
   <div class="control-group" id="container_password1">
     <label for="id_password">Password:</label>
     <div class="input">
-      {{ user_form.password1 }}
+      {{ form.password1 }}
       <div id="message_password1" class="help-inline"></div>
     </div>
   </div>
   <div class="control-group" id="container_password2">
     <label for="id_password2">Confirm Password:</label>
     <div class="input">
-      {{ user_form.password2 }}
+      {{ form.password2 }}
       <div id="message_password2" class="help-inline"></div>
     </div>
   </div>
   <div class="control-group">
-    <a class="btn btn-large btn-primary" onclick="App.User.save_user()" id="save_button">Register</a>
+    <a class="btn btn-large btn-primary" onclick="App.User.seller_signup_submit()" id="save_button">Register</a>
   </div>
-  {{user_form.user_id}}
 </div>
+<input type="hidden" value="{{seller_request.approval_key}}" id="id_approval_key"/>
 Already have an account? <a href="/login">Login</a>
 {% endblock %}

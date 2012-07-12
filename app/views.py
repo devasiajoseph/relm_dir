@@ -214,13 +214,20 @@ def seller_register_submit(request):
 
 
 def seller_signup(request, approval_key):
-    seller_request = get_object_or_404(SellerRequest,
-        approval_key=approval_key)
+    seller_request = get_object_or_404(
+        SellerRequest,
+        approval_key=approval_key,
+        status=settings.SELLER_REQUEST_STATUS["APPROVED"])
     naive_date = seller_request.key_expires.replace(tzinfo=None)
     if naive_date < datetime.datetime.today():
         return render_to_response('expired.html',
                                   context_instance=RequestContext(request))
-    return
+
+    form = SellerSignUpForm()
+    return render_to_response('seller/seller_signup.html',
+                              context_instance=RequestContext(
+            request, {"form": form,
+                      "seller_request": seller_request}))
 
 
 @transaction.commit_on_success

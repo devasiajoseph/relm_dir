@@ -17,8 +17,9 @@ class ApproveSellerRequestForm(forms.Form):
             if self.cleaned_data["decision"] == settings.\
                     SELLER_REQUEST_STATUS["APPROVED"]:
                 key_object = create_key(seller_request.email, 2)
+                print key_object
                 seller_request.approval_key = key_object["key"]
-                seller_request.expires = key_object["expiry"]
+                seller_request.key_expires = key_object["expiry"]
                 seller_request.status = settings.SELLER_REQUEST_STATUS[
                     "APPROVED"]
                 seller_request.save()

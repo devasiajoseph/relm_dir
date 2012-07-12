@@ -86,5 +86,5 @@ class SellerUserTest(TestCase):
         response = c.post('/seller/signup/form/submit', signup)
         response_check = verify_json_response(
             response.content,
-            settings.APP_CODE["SELLER SIGNED UP"])
+            settings.APP_CODE["CALLBACK"])
         self.assertTrue(response_check)

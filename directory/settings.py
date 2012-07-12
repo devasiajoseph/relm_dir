@@ -4,7 +4,8 @@ import sys
 # Django settings for mysite project.
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
-#define your own rule to check whether dev or production
+ADMIN_APP = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                         "../administrator"))
 if 'devasia' in os.getcwd():
     LOCALHOST = True
     DEBUG = True
@@ -122,16 +123,17 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'quickstart.urls'
+ROOT_URLCONF = 'directory.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'quickstart.wsgi.application'
+WSGI_APPLICATION = 'directory.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_PATH, 'templates')
+    os.path.join(PROJECT_PATH, 'templates'),
+    os.path.join(ADMIN_APP, 'templates')
 )
 
 INSTALLED_APPS = (
@@ -141,7 +143,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
+    'administrator'
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -176,8 +179,6 @@ LOGGING = {
         },
     }
 }
-
-# JSON status codes to communicate with the front end
 APP_CODE = {
     "ACCESS DENIED": "access_denied",
     "INVALID REQUEST": "invalid_request",
@@ -187,53 +188,42 @@ APP_CODE = {
     "SERVER MESSAGE": 'server_message',
     "PAGE LOADED": 'page_loaded',
     "REGISTERED": 'registered',
-    "LOGIN": 'login',
+    "LOGIN": 'login'
 }
+
+SELLER_REQUEST_STATUS = {
+    "PENDING": "pending",
+    "APPROVED": "approved",
+    "REJECTED": "rejected",
+    "SIGNEDUP": "signedup"
+    }
+
+APP_USER_TYPE = {
+    "SELLER": "seller",
+    "BUYER": "buyer"
+    }
 
 APP_USERNAME = "dev"
 APP_PASSWORD = "password"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ADMIN_EMAIL = "admin@site.com"
-SITE_URL = "http://yoursiteurl"
+SITE_URL = "https://localhost:8000/"
 AUTH_PROFILE_MODULE = 'app.UserProfile'
 EMAIL_USE_TLS = True  # True for gmail testing
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'relmdirectory'
+EMAIL_HOST_PASSWORD = 'roofcake'
 EMAIL_PORT = 587  # 587 for gmail server
 EMAIL_VERIFICATION_REQUIRED = False
-FBAPP_ID = ""
-FBAPP_SECRET = ""
-FBAPP_REDIRECT_URI = "http://yoursite/fbauth"
-
-
-FBAPP_AUTH_REDIRECT = "https://www.facebook.com/dialog/oauth?\
-client_id=%(FBAPP_ID)s&\
-redirect_uri=%(FBAPP_REDIRECT_URI)s&\
-&state=%(CSRF_TOKEN)s"
-
-FBAPP_ACCESS_TOKEN_URL = "https://graph.facebook.com/oauth/access_token?\
-client_id=%(FBAPP_ID)s\
-&redirect_uri=%(FBAPP_REDIRECT_URI)s&\
-client_secret=%(FBAPP_SECRET)s&\
-code=%(FB_CODE)s"
-
-TWITTER_KEY = ''
-TWITTER_SECRET = ''
-
-GOOGLE_AUTH_REDIRECT = "https://accounts.google.com/o/oauth2/auth?redirect_uri=https://localhost/oauth2callback&response_type=code&client_id=56279468910.apps.googleusercontent.com&approval_prompt=force&scope=https://Fwww.googleapis.com/Fauth/blogger&access_type=offline"
-
-GOOGLE_SECRET = ""
-GOOGLE_CLIENT_ID = ""
 
 if LOCALHOST:
-    SITE_URL = "http://localhost:8000"
+    SITE_URL = "https://localhost"
     DATABASES = {
       'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
+        'NAME': 'relmdir',
+        'USER': 'retailer',
+        'PASSWORD': 'retailer',
         'HOST': '',
         'PORT': ''
         }
@@ -245,19 +235,22 @@ if LOCALHOST:
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
+    'administrator'
 
     # Uncomment the next line to enable the admin:
         # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
         # 'django.contrib.admindocs',
     )
-    MEDIA_URL = 'http://localhost:8090/quickstart_static/'
-    FBAPP_ID = ""
-    FBAPP_SECRET = ""
-    FBAPP_REDIRECT_URI = "http://localhost:8000/fbauth"
-    TWITTER_KEY = 'local key'
-    TWITTER_SECRET = 'local secret'
-    GOOGLE_SECRET = "local secret"
-    GOOGLE_CLIENT_ID = "local id"
-    GOOGLE_REDIRECT_URI = "https://localhost/oauth2callback"
+    MEDIA_URL = 'http://localhost:8090/directory_static/'
+
+if TEST:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'relmdir_test',
+            'USER': 'retailer',                      # Not used with sqlite3.
+            'PASSWORD': 'retailer',                  # Not used with sqlite3.
+            }
+        }

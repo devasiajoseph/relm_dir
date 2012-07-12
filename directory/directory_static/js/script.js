@@ -181,10 +181,11 @@ var App = {
 	    alert("submitted");
 	},
 	seller_signup_submit:function(){
-	    
+	    var obj = {"value":["username", "password1", "password2", "approval_key"]};
+            App.submit_data(obj,{},"/seller/signup/form/submit", App.User.seller_signup_submit_callback, "loader");
 	},
 	seller_signup_submit_callback:function(data){
-	    
+	    alert(data["code"]);
 	}
 	
     }

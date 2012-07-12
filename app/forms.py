@@ -358,7 +358,7 @@ class SellerSignUpForm(forms.Form):
             # update status
             seller_request.status = settings.SELLER_REQUEST_STATUS["SIGNEDUP"]
             seller_request.save()
-            response["code"] = settings.APP_CODE["SELLER SIGNED UP"]
+            response["code"] = settings.APP_CODE["CALLBACK"]
             response["user_id"] = new_user.id
         except:
             response["code"] = settings.APP_CODE["SYSTEM ERROR"]
