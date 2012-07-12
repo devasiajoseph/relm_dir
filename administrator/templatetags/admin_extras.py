@@ -8,7 +8,7 @@ def status_label(value):
     status_map = {
         'pending': '<span class="label label-warning">Pending</span>',
         'approved': '<span class="label label-success">Approved</span>',
-        'rejected': '<span class="label label-rejected">Rejected</span>',
+        'rejected': '<span class="label label-important">Rejected</span>',
         }
     return status_map[value]
 

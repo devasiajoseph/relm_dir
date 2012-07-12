@@ -10,6 +10,7 @@ from django.conf import settings
 import simplejson
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from app.models import SellerRequest
 
 
 def logged_in_client(username=settings.APP_USERNAME,
@@ -65,3 +66,25 @@ def verify_json_response(string_data, code):
         return True
     else:
         return False
+
+
+class SellerUserTest(TestCase):
+    fixtures = ['test_data.json']
+
+    def test_seller_approval(self):
+        """
+        Atleast one approved accounts needed for this test
+        """
+        c = Client()
+        approved_request = SellerRequest.objects.filter(
+            status=settings.SELLER_REQUEST_STATUS["APPROVED"])[0]
+        # make sure this username is not present already in the fixtures
+        signup = {"username": "incharinkou",
+                  "password1": "password",
+                  "password2": "password",
+                  "approval_key": approved_request.approval_key}
+        response = c.post('/seller/signup/form/submit', signup)
+        response_check = verify_json_response(
+            response.content,
+            settings.APP_CODE["SELLER SIGNED UP"])
+        self.assertTrue(response_check)

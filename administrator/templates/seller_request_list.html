@@ -17,6 +17,10 @@
   </li> 
   <li {%ifequal list_type "rejected"%}class="active"{%endifequal%}>
     <a href="/admin/seller/request/list/rejected/1">Rejected</a>
+    <span class="divider">|</span>
+  </li>
+  <li {%ifequal list_type "signedup"%}class="active"{%endifequal%}>
+    <a href="/admin/seller/request/list/signedup/1">Signed up</a>
   </li>
 </ul>
 <table class="table table-striped">

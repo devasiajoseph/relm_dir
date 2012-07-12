@@ -8,12 +8,14 @@ from django.contrib.auth import logout
 from django.core.urlresolvers import reverse
 import datetime
 from app.models import SellerRequest
+from administrator.forms import ApproveSellerRequestForm
 
 
 def admin_dashboard(request):
     return render_to_response(
         "admin_dashboard.html",
         context_instance=RequestContext(request))
+
 
 def seller_request_list(request, list_type, page):
     if list_type == "all":
@@ -37,3 +39,15 @@ def seller_request_view(request, object_id):
         "seller_request_view.html",
         context_instance=RequestContext(request,
                                         {"seller_request": seller_request}))
+
+
+def seller_request_decision(request):
+    response = reply_object()
+    form = ApproveSellerRequestForm(request.POST)
+    if form.is_valid():
+        response = form.save_decision()
+    else:
+        response["code"] = settings.APP_CODE["FORM ERROR"]
+        response["errors"] = form.errors
+
+    return HttpResponse(simplejson.dumps(response))

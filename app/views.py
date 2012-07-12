@@ -5,9 +5,10 @@ from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from app.forms import CreateUserForm, LoginForm, PasswordEmailForm,\
-PasswordEmailForm, SellerRequestForm
-from app.models import UserProfile, Country
+PasswordEmailForm, SellerRequestForm, SellerSignUpForm
+from app.models import UserProfile, Country, SellerRequest
 from app.utilities import reply_object, create_key
 import simplejson
 import datetime
@@ -212,9 +213,24 @@ def seller_register_submit(request):
     return HttpResponse(simplejson.dumps(response))
 
 
-def test(request):
-    """
-    Test function
-    """
-    print "test"
-    return HttpResponse("test")
+def seller_signup(request, approval_key):
+    seller_request = get_object_or_404(SellerRequest,
+        approval_key=approval_key)
+    naive_date = seller_request.key_expires.replace(tzinfo=None)
+    if naive_date < datetime.datetime.today():
+        return render_to_response('expired.html',
+                                  context_instance=RequestContext(request))
+    return
+
+
+@transaction.commit_on_success
+def seller_signup_submit(request):
+    response = reply_object()
+    form = SellerSignUpForm(request.POST)
+    if form.is_valid():
+        response = form.save_user()
+    else:
+        response["code"] = settings.APP_CODE["FORM ERROR"]
+        response["errors"] = form.errors
+
+    return HttpResponse(simplejson.dumps(response))

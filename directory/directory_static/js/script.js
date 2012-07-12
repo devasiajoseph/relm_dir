@@ -173,12 +173,18 @@ var App = {
 	password_reset_password_callback:function(data){
 	    location.href=data["redirect"];
 	},
-	seller_register_submit:function(data){
+	seller_register_submit:function(){
 	    var obj = {"value":["name", "address_line1", "city", "country", "phone", "email"]};
             App.submit_data(obj,{},"/seller/register/submit", App.User.seller_register_submit_callback, "loader");
 	},
 	seller_register_submit_callback:function(data){
 	    alert("submitted");
+	},
+	seller_signup_submit:function(){
+	    
+	},
+	seller_signup_submit_callback:function(data){
+	    
 	}
 	
     }

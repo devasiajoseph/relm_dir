@@ -20,5 +20,8 @@ urlpatterns = patterns('',
         name='seller_request_list'),
     url(r'^seller/request/view/(?P<object_id>[0-9]+)$',
         'administrator.views.seller_request_view',
-        name='seller_request_view')
+        name='seller_request_view'),
+     url(r'^seller/request/decision$',
+         'administrator.views.seller_request_decision',
+         name='seller_request_decision'),
 )

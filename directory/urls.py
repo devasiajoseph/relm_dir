@@ -41,8 +41,13 @@ urlpatterns = patterns('',
         name='seller_register'),
     url(r'^seller/register/submit$', 'app.views.seller_register_submit',
         name='seller_register_submit'),
+    url(r'^seller/signup/(?P<approval_key>[0-9a-z]+)$',
+        'app.views.seller_signup',
+        name='seller_signup'),
+    url(r'^seller/signup/form/submit$', 'app.views.seller_signup_submit',
+        name='seller_signup_submit'),
     # admin
     url(r'^admin/', include('administrator.urls')),
     #test url
-    url(r'^test$', 'app.views.test', name='test'),
+    #url(r'^test$', 'app.views.test', name='test'),
 )

@@ -288,3 +288,79 @@ class SellerRequestForm(forms.Form):
             phone=self.cleaned_data["phone"],
             email=self.cleaned_data["email"],
             status=settings.SELLER_REQUEST_STATUS["PENDING"])
+
+
+class SellerSignUpForm(forms.Form):
+    username = forms.RegexField(regex=r'^\w+$',
+                                max_length=30,
+                                widget=forms.TextInput(attrs=attrs_dict),
+                                label=("Username"),
+                                error_messages={'invalid':
+                                ("Username must contain only letters, numbers and underscores.")})
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict,
+        render_value=False), label=("Password"))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs=attrs_dict,
+        render_value=False), label=("Password (again)"))
+    approval_key = forms.CharField()
+
+    def clean_username(self):
+        """
+        Validate that the username is alphanumeric (for charfield only)
+        and is not already in use.
+        """
+        try:
+            User.objects.get(username__iexact=self.cleaned_data['username'])
+        except User.DoesNotExist:
+            return self.cleaned_data['username']
+        raise forms.ValidationError((
+                "A user with that username already exists."))
+
+    def clean(self):
+        """
+        Verifiy that the values entered into the two password fields
+        match. Note that an error here will end up in
+        non_field_errors() because it doesn't apply to a single
+        field.
+        """
+        if 'password1' in self.cleaned_data and\
+                'password2' in self.cleaned_data:
+            if self.cleaned_data['password1'] != self.cleaned_data[
+                'password2']:
+                raise forms.ValidationError((
+                        "The two password fields didn't match."))
+        return self.cleaned_data
+
+    def save_user(self):
+        """
+        Creates a new user
+        """
+        response = reply_object()
+        try:
+            seller_request = SellerRequest.objects.get(
+                approval_key=self.cleaned_data["approval_key"])
+            # create new user
+            new_user = User.objects.create(
+                username=self.cleaned_data["username"],
+                email=seller_request.email)
+            new_user.set_password(self.cleaned_data["password1"])
+            new_user.save()
+            # create user profile
+            user_profile = UserProfile.objects.create(
+                user=new_user,
+                name=seller_request.name,
+                address_line1=seller_request.address_line1,
+                city=seller_request.city,
+                country=seller_request.country,
+                phone=seller_request.phone,
+                user_type=settings.APP_USER_TYPE["SELLER"]
+                )
+            user_profile.save()
+            # update status
+            seller_request.status = settings.SELLER_REQUEST_STATUS["SIGNEDUP"]
+            seller_request.save()
+            response["code"] = settings.APP_CODE["SELLER SIGNED UP"]
+            response["user_id"] = new_user.id
+        except:
+            response["code"] = settings.APP_CODE["SYSTEM ERROR"]
+
+        return response

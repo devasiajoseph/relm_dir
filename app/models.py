@@ -26,7 +26,7 @@ class UserProfile(models.Model):
     name = models.CharField(max_length=1024)
     address_line1 = models.CharField(max_length=1024)
     city = models.CharField(max_length=1024)
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, null=True, blank=True)
     phone = models.CharField(max_length=20)
     user_type = models.CharField(max_length=10)
 
@@ -49,7 +49,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     return
 
 # connect to the signal
-post_save.connect(create_user_profile, sender=User)
+# post_save.connect(create_user_profile, sender=User)
 
 
 class SellerRequest(models.Model):
