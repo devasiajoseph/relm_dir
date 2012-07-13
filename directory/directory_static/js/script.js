@@ -178,7 +178,7 @@ var App = {
             App.submit_data(obj,{},"/seller/register/submit", App.User.seller_register_submit_callback, "loader");
 	},
 	seller_register_submit_callback:function(data){
-	    alert("submitted");
+	    window.location.href="/seller/register/success";
 	},
 	seller_signup_submit:function(){
 	    var obj = {"value":["username", "password1", "password2", "approval_key"]};

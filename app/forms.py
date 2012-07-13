@@ -1,6 +1,6 @@
 from django import forms
 from django.conf import settings
-from app.utilities import reply_object
+from app.utilities import reply_object, send_register_success_email
 from django.contrib.auth.models import User, check_password
 from django.contrib.auth import authenticate, login
 import re
@@ -288,6 +288,8 @@ class SellerRequestForm(forms.Form):
             phone=self.cleaned_data["phone"],
             email=self.cleaned_data["email"],
             status=settings.SELLER_REQUEST_STATUS["PENDING"])
+
+        send_register_success_email(seller_request.email)
 
 
 class SellerSignUpForm(forms.Form):

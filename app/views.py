@@ -213,6 +213,12 @@ def seller_register_submit(request):
     return HttpResponse(simplejson.dumps(response))
 
 
+def seller_register_success(request):
+    return render_to_response(
+        "seller/seller_request_success.html",
+        context_instance=RequestContext(request))
+
+
 def seller_signup(request, approval_key):
     seller_request = get_object_or_404(
         SellerRequest,
